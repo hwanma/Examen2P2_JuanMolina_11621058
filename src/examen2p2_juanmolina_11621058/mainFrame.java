@@ -10,6 +10,9 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 
 /**
  *
@@ -17,15 +20,21 @@ import java.util.ArrayList;
  */
 public class mainFrame extends javax.swing.JFrame {
 
+    private DefaultMutableTreeNode nodo_seleccionado;
+    private planeta planeta_seleccionado;
+    private planeta p1;
+    private planeta p2;
     private ArrayList<planeta> publicos = new ArrayList();
     private ArrayList<cientifico> cientificos = new ArrayList();
     
     
     public mainFrame() {
         initComponents();
-        
+        this.setLocationRelativeTo(null);
         agregarPublicos();
         cargarCientificos();
+        cientificosCombo();
+        publicosArbol();
     }
 
     /**
@@ -53,9 +62,19 @@ public class mainFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jt_planetas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jt_planetasMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jt_planetas);
 
         jchb_publico.setText("PUBLICOS");
+        jchb_publico.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jchb_publicoActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("CIENTIFICOS");
 
@@ -64,6 +83,11 @@ public class mainFrame extends javax.swing.JFrame {
         jLabel2.setText("NOMBRE");
 
         jb_cientifico.setText("ANADIR CIENTIFICO");
+        jb_cientifico.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jb_cientificoActionPerformed(evt);
+            }
+        });
 
         jb_colisionar.setText("COLISIONAR");
 
@@ -102,7 +126,7 @@ public class mainFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
@@ -114,21 +138,61 @@ public class mainFrame extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(jtf_planeta2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jb_colisionar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(26, 26, 26)
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jcb_cientificos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(nombreCientifico, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(36, 36, 36)
+                        .addGap(18, 18, 18)
                         .addComponent(jb_cientifico)))
                 .addGap(18, 18, 18))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jb_cientificoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_cientificoActionPerformed
+        String nombre = nombreCientifico.getText();
+        cientifico temp = new cientifico(nombre);
+        cientificos.add(temp);
+        cientificosCombo();
+        
+        nombreCientifico.setText("");
+        guardarCientificos();
+    }//GEN-LAST:event_jb_cientificoActionPerformed
+
+    private void jchb_publicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jchb_publicoActionPerformed
+        if(jchb_publico.isSelected()){
+            publicosArbol();
+        } else {
+            cientifico temp = (cientifico)jcb_cientificos.getSelectedItem();
+            descubiertosArbol(temp);
+        }
+    }//GEN-LAST:event_jchb_publicoActionPerformed
+
+    private void jt_planetasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jt_planetasMouseClicked
+        try {
+            int row = jt_planetas.getClosestRowForLocation(evt.getX(), evt.getY());
+            jt_planetas.setSelectionRow(row);
+            Object v1 = jt_planetas.getSelectionPath().getLastPathComponent();
+            nodo_seleccionado = (DefaultMutableTreeNode) v1;
+            planeta_seleccionado = (planeta) nodo_seleccionado.getUserObject();
+        } catch (Exception e) {
+
+        }
+        if(evt.getClickCount()==2){
+            if (jtf_planeta1.getText().isEmpty()) {
+                jtf_planeta1.setText(planeta_seleccionado.toString());
+                p1=planeta_seleccionado;
+            } else if (jtf_planeta2.getText().isEmpty()) {
+                jtf_planeta2.setText(planeta_seleccionado.toString());
+                p2=planeta_seleccionado;
+            }
+        }
+    }//GEN-LAST:event_jt_planetasMouseClicked
 
     private void agregarPublicos(){
         publicos.add(new planeta(5000,13000,400,300,"Mercurio","Terrestre"));
@@ -140,6 +204,33 @@ public class mainFrame extends javax.swing.JFrame {
         publicos.add(new planeta(200000,20000,670,690,"Urano","Gaseoso"));
         publicos.add(new planeta(200000,20000,840,900,"Neptuno","Gaseoso"));
     }
+    
+    private void cientificosCombo(){
+        DefaultComboBoxModel modelo = (DefaultComboBoxModel)jcb_cientificos.getModel();
+        modelo.removeAllElements();
+        for (cientifico temp : cientificos)
+            modelo.addElement(temp);
+    }
+    
+    private void publicosArbol(){
+        DefaultTreeModel modelo = (DefaultTreeModel)jt_planetas.getModel();
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode("Planetas");
+        for (planeta temp : publicos){
+            DefaultMutableTreeNode planetaNodo = new DefaultMutableTreeNode(temp);
+            root.add(planetaNodo);
+        }
+        modelo.setRoot(root);
+    } 
+    
+    private void descubiertosArbol(cientifico c){
+        DefaultTreeModel modelo = (DefaultTreeModel)jt_planetas.getModel();
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode("Planetas");
+        for (planeta temp : c.getDescubiertos()){
+            DefaultMutableTreeNode planetaNodo = new DefaultMutableTreeNode(temp);
+            root.add(planetaNodo);
+        }
+        modelo.setRoot(root);
+    } 
     
     private void guardarCientificos(){
         try{
