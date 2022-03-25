@@ -5,17 +5,27 @@
  */
 package examen2p2_juanmolina_11621058;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+
 /**
  *
  * @author Hwan
  */
 public class mainFrame extends javax.swing.JFrame {
 
-    /**
-     * Creates new form mainFrame
-     */
+    private ArrayList<planeta> publicos = new ArrayList();
+    private ArrayList<cientifico> cientificos = new ArrayList();
+    
+    
     public mainFrame() {
         initComponents();
+        
+        agregarPublicos();
+        cargarCientificos();
     }
 
     /**
@@ -120,9 +130,38 @@ public class mainFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
+    private void agregarPublicos(){
+        publicos.add(new planeta(5000,13000,400,300,"Mercurio","Terrestre"));
+        publicos.add(new planeta(100000,15000,640,260,"Venus","Terrestre"));
+        publicos.add(new planeta(140000,17000,760,570,"Tierra","Terrestre"));
+        publicos.add(new planeta(90000,12000,360,360,"Marte","Terrestre"));
+        publicos.add(new planeta(400000,40000,340,310,"Jupiter","Gaseoso"));
+        publicos.add(new planeta(300000,30000,560,450,"Saturno","Gaseoso"));
+        publicos.add(new planeta(200000,20000,670,690,"Urano","Gaseoso"));
+        publicos.add(new planeta(200000,20000,840,900,"Neptuno","Gaseoso"));
+    }
+    
+    private void guardarCientificos(){
+        try{
+            ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream("./cientificos"));
+            for (cientifico temp : cientificos)
+                os.writeObject(temp);
+        }catch(Exception ex){
+            System.out.println(ex);
+        }
+    }
+    
+    private void cargarCientificos(){
+        try{
+            ObjectInputStream os = new ObjectInputStream(new FileInputStream("./cientificos"));
+            cientifico cientifico;
+            while( (cientifico = (cientifico)os.readObject()) != null )
+                cientificos.add(cientifico);
+        }catch(Exception ex){
+            System.out.println(ex);
+        }
+    }
+    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
