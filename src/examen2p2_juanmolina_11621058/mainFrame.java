@@ -48,21 +48,23 @@ public class mainFrame extends javax.swing.JFrame implements Runnable {
 
     Thread hilo = new Thread(this);
     Random rd = new Random();
-    private double distancia;
+    private int distancia;
     boolean pausa = false;
     @Override
     public void run(){
         int cont = 0;
         while(true){
             System.out.print("");
+            int counter = 0;
             while(!pausa){
                 try{
-                    distancia = (double) Math.sqrt((Math.pow((p2.getX() - p1.getX()), 2)) + (Math.pow((p2.getY() - p1.getY()), 2)));
+                    distancia = (int)Math.round(((double)(Math.sqrt((Math.pow((p2.getX() - p1.getX()), 2)) + (Math.pow((p2.getY() - p1.getY()), 2))))));
                     jpb_colision.setMaximum((int)distancia);
-                    jpb_colision.setValue((int)distancia);
+                    jpb_colision.setValue(counter);
                     if(jpb_colision.getValue()>=(int)distancia){
                         pausa=true;
                     }
+                    counter++;
                     Thread.sleep(5);
                 }catch(Exception ex){
                     System.out.println(ex);
@@ -150,6 +152,11 @@ public class mainFrame extends javax.swing.JFrame implements Runnable {
         });
 
         jb_colisionar.setText("COLISIONAR");
+        jb_colisionar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jb_colisionarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -269,30 +276,44 @@ public class mainFrame extends javax.swing.JFrame implements Runnable {
     private void jcb_cientificosItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcb_cientificosItemStateChanged
         cientifico_seleccionado = (cientifico)jcb_cientificos.getSelectedItem();
     }//GEN-LAST:event_jcb_cientificosItemStateChanged
+
+    private void jb_colisionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_colisionarActionPerformed
+        hilo = new Thread(this);
+        hilo.start();
+    }//GEN-LAST:event_jb_colisionarActionPerformed
     
     private void agregarPublicos(){
-        publicos.add(new planeta(5000,13000,400,300,"Mercurio","Terrestre"));
-        publicos.add(new planeta(100000,15000,640,260,"Venus","Terrestre"));
-        publicos.add(new planeta(140000,17000,760,570,"Tierra","Terrestre"));
-        publicos.add(new planeta(90000,12000,360,360,"Marte","Terrestre"));
-        publicos.add(new planeta(400000,40000,340,310,"Jupiter","Gaseoso"));
-        publicos.add(new planeta(300000,30000,560,450,"Saturno","Gaseoso"));
-        publicos.add(new planeta(200000,20000,670,690,"Urano","Gaseoso"));
-        publicos.add(new planeta(200000,20000,840,900,"Neptuno","Gaseoso"));
+        publicos.add(new terrestre(5000,13000,400,300,"Mercurio"));
+        publicos.add(new terrestre(100000,15000,640,260,"Venus"));
+        publicos.add(new terrestre(140000,17000,760,570,"Tierra"));
+        publicos.add(new terrestre(90000,12000,360,360,"Marte"));
+        publicos.add(new gaseoso(400000,40000,340,310,"Jupiter"));
+        publicos.add(new gaseoso(300000,30000,560,450,"Saturno"));
+        publicos.add(new gaseoso(200000,20000,670,690,"Urano"));
+        publicos.add(new gaseoso(200000,20000,840,900,"Neptuno"));
     }
     
     public void nuevoPlaneta(planeta p1,planeta p2){
         int prob;
+        double peso = (p1.getPeso()+p2.getPeso())/2;
+        double tamano = (p1.getTamano()+p2.getTamano())/2;
+        double x = (p1.getX()+p2.getX())/2;
+        double y = (p1.getY()+p2.getY())/2; 
+        
         if(p1 instanceof terrestre){
             prob = 1+r.nextInt(99);
             if(prob<=24){
                 String nombre = JOptionPane.showInputDialog("Un nuevo planeata se ha creado!"+
                         "\nIngrese el nombre del nuevo planeta: ");
-                double peso = (p1.getPeso()+p2.getPeso())/2;
-                c1.getDescubiertos().add(new planeta());
+                c1.getDescubiertos().add(new terrestre(tamano,peso,x,y,nombre));
             }
         } else if (p1 instanceof gaseoso){
             prob = 1+r.nextInt(19);
+            if(prob<=20){
+                String nombre = JOptionPane.showInputDialog("Un nuevo planeata se ha creado!"+
+                        "\nIngrese el nombre del nuevo planeta: ");
+                c1.getDescubiertos().add(new gaseoso(tamano,peso,x,y,nombre));
+            }
         }
     }
     

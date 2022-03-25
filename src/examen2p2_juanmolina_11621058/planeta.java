@@ -12,50 +12,49 @@ import java.io.Serializable;
  * @author Hwan
  */
 public class planeta implements Serializable{
-    private int tamano,peso,x,y;
+    private double tamano,peso,x,y;
     private String nombre,tipo;
 
     public planeta() {
     }
 
-    public planeta(int tamano, int peso, int x, int y, String nombre, String tipo) {
+    public planeta(double tamano, double peso, double x, double y, String nombre) {
         this.tamano = tamano;
         this.peso = peso;
         this.x = x;
         this.y = y;
         this.nombre = nombre;
-        this.tipo = tipo;
     }
 
-    public int getTamano() {
+    public double getTamano() {
         return tamano;
     }
 
-    public void setTamano(int tamano) {
+    public void setTamano(double tamano) {
         this.tamano = tamano;
     }
 
-    public int getPeso() {
+    public double getPeso() {
         return peso;
     }
 
-    public void setPeso(int peso) {
+    public void setPeso(double peso) {
         this.peso = peso;
     }
 
-    public int getX() {
+    public double getX() {
         return x;
     }
 
-    public void setX(int x) {
+    public void setX(double x) {
         this.x = x;
     }
 
-    public int getY() {
+    public double getY() {
         return y;
     }
 
-    public void setY(int y) {
+    public void setY(double y) {
         this.y = y;
     }
 
@@ -65,15 +64,7 @@ public class planeta implements Serializable{
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-
-    public String getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
+    }   
 
     @Override
     public String toString() {

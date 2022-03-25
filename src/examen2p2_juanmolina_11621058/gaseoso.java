@@ -13,8 +13,8 @@ import java.io.Serializable;
  */
 public class gaseoso extends planeta implements Serializable{
 
-    public gaseoso(int tamano, int peso, int x, int y, String nombre, String tipo) {
-        super(tamano, peso, x, y, nombre, tipo);
+    public gaseoso(double tamano, double peso, double x, double y, String nombre) {
+        super(tamano, peso, x, y, nombre);
     }
     
 }
